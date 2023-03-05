@@ -1,3 +1,7 @@
+* {
+  font-family: Sans-Serif;
+}
+
 #app-container {
   height: 100vh;
   display: flex;
