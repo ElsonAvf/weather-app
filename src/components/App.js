@@ -2,6 +2,7 @@ import React from 'react'
 import getWeatherOpenJson from './../fetchData/fetchWeatherOpen';
 import Form from './Form';
 import CurrentWeather from './CurrentWeather';
+import Error from './Error';
 
 import './../assets/normalize.css';
 import './../assets/style.css';
@@ -11,6 +12,7 @@ export default function App () {
   const [unit, setUnit] = React.useState('metric');
   const [city, setCity] = React.useState('São Paulo');
   const [isDay, setIsDay] = React.useState();
+  const [error, setError] = React.useState(false);
   
   function displayLoading() {
     document.querySelector('.hidden').style.display = 'block';
@@ -22,6 +24,10 @@ export default function App () {
   function toggleIsDay(date) {
     const hour = new Date(date * 1000).getHours();
     (hour > 5 && hour < 18) ? setIsDay(true) : setIsDay(false);
+  };
+  
+  function removeError() {
+    setError(false);
   };
   
   React.useEffect(() => {
@@ -42,8 +48,8 @@ export default function App () {
       });
       
       toggleIsDay(json.dt)
-      hideLoading();
-    }).catch(err => console.log('error'))
+    }).catch(err => setError(true))
+      .finally(hideLoading)
   }, [unit, city]);
   
   
@@ -72,6 +78,7 @@ export default function App () {
           />
         }
       </div>
+      {error && <Error city={city} handleClick={removeError}/>}
     </div>
   );
 };
